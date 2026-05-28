@@ -1,0 +1,335 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6b7ea01e-36e5-46b4-9465-2e5149ee0325",
+      "name": "When chat message received",
+      "webhookId": "03a0e405-66e7-4216-b853-e68437e3e55e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "\nYou are a smart taxi ordering assistant for \"TheiScale Taxi Service\".  \n\nRules:  \n\n1. When a user sends their first message (like hi, hello), reply with:  \n\"Welcome to TheiScale Taxi Service  \nHow can I help you today?  \n- 🛒 Booking Order  \n- ℹ️ FAQ / Information  \n- 📦 Check order / taxi avilablity\"  \n\n(👉 Keep the tone friendly like a taxi booking app, not like a product e-commerce site)  \n\n2. If user wants *Booking Order\\\\*:  \n- Ask step by step: Customer Name, Taxi Name, Quantity Ordered\n- Check Inventory sheet before confirming  \n   - If available → \"Your order for *[item]* (x Quantity Ordered) is confirmed ✅\"  \n   - If not available → \"Sorry, *[item]* is not available ❌. Available options: [list items]\"  \n- Only confirmed orders go into the Orders sheet  \n- In Orders sheet always include:  \n   Status = Confirmed / Rejected  \n   Description = \"Order accepted (item available)\" OR \"Order rejected (out of stock)\"  \n\n3. If user wants *FAQ*:  \n- Answer short and clear (booking time, payment method, teaveling hours)  \n\n4. If user wants *check order* or *check stock*:  \n- Ask for customer name or order id  \n- Look up in Google Sheets (Orders / Taxi_Names)  \n   - If checking order → reply with status (Confirmed / Rejected / Cancelled / Delivered)  \n   - If checking stock → reply with available taxi  \n   - Also list all *available*  taxi with quantity if requested  fetch it from taxi_name sheet.\n\n5. If user wants *cancel order*:  \n- Reply politely:  \n  \"Sorry 🙏 I cannot cancel orders directly.  \n   Please call the taxi owner first and inform them.  \n   Owner Contact: +91- 7880-113-112\"\n   Website: www.theiscale.com\n\n\n6. Always reply in short text like a normal WhatsApp chat  \n- Do not use **bold** or long paragraphs  \n- Use *stars* only for highlighting words  \n- Keep tone friendly, polite, and taxi booking app style  "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4cd0dbcc-2697-4e6e-a3e7-a5716a63bef3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "4bcc64ee-8a6d-4257-8487-992d88d77eeb",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w",
+          "mode": "list",
+          "cachedResultName": "Cab Booking System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1885808066,
+          "mode": "list",
+          "cachedResultName": "Taxi_Names",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit#gid=1885808066"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "7177d054-c0f3-475d-84b4-44879bb39092",
+      "name": "taxi details",
+      "notesInFlow": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gsKhduoRcJNRHV6C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w",
+          "mode": "list",
+          "cachedResultName": "Cab Booking System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1015064257,
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit#gid=1015064257"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        304
+      ],
+      "id": "2ff44082-a573-41fa-8602-82a73c4b80c6",
+      "name": "questions",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gsKhduoRcJNRHV6C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w",
+          "mode": "list",
+          "cachedResultName": "Cab Booking System",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1105108244,
+          "mode": "list",
+          "cachedResultName": "Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Uv1WQqHXUuIYifqjUF9wsjNYVfnVN_-OH-nV1T_WY7w/edit#gid=1105108244"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Name', ``, 'string') }}",
+            "Taxi Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Taxi_Name', ``, 'string') }}",
+            "Quantity Ordered": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Quantity_Ordered', ``, 'string') }}",
+            "Order Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Order_Date', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Taxi Name",
+              "displayName": "Taxi Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Quantity Ordered",
+              "displayName": "Quantity Ordered",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Order Date",
+              "displayName": "Order Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        304
+      ],
+      "id": "4ef86c7a-5e2b-4cc6-9e85-5112dd4a168c",
+      "name": "order",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gsKhduoRcJNRHV6C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "b98a3dec-0573-45b5-9d84-acc395e9186b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Yt6SN57bMTr9NprM",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "fbd5fc0c-0d88-455b-88dd-01af6e93f9fd",
+      "name": "Send message",
+      "webhookId": "56af3dac-9df6-4bf6-bb41-15f106f6fe83"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "taxi details": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "questions": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "order": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5d8ad63f-100e-48b0-a212-e8c5fdc14101",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "278a7e4c30f3de3c21bce997ea86428239dff6f0bf30e6c86ae1ed0a90f59415"
+  },
+  "id": "OKzDJDxTMSJ22Cxb",
+  "tags": []
+}
