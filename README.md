@@ -74,7 +74,7 @@ The chatbot is designed with structured conversation logic and integrates AI dec
 <img width="1920" height="1080" alt="Screenshot (54)" src="https://github.com/user-attachments/assets/5623dd01-5cb3-4520-9836-6f6fafcdb6fa" />
 
 🔹 AI Agent Setup
-<img width="706" height="649" alt="Screenshot (50)" src="https://github.com/user-attachments/assets/0772e659-bed6-4302-854a-01a266e0ada0" />
+<img width="1920" height="1080" alt="Screenshot (56)" src="https://github.com/user-attachments/assets/bea5509b-cb67-4491-b9fc-2646dd1fcb91" />
 
 🔹 Chat Output
 <img width="1920" height="1080" alt="Screenshot (58)" src="https://github.com/user-attachments/assets/f3939dd2-057f-46cb-8567-b7991f8c144d" />
